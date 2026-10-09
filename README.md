@@ -21,6 +21,27 @@ En producción: **https://aikukisna.chilecentral.cloudapp.azure.com**
 > La app Android vive en su propio repositorio (`Aikukisna`). Este repositorio contiene solo el sitio
 > web y su infraestructura.
 
+## Criterios de evaluación y cómo comprobarlos
+
+| Criterio | Cómo se cumple | Cómo comprobarlo |
+|---|---|---|
+| **1. Rendimiento y acceso** | URL pública; Nginx sirve los archivos estáticos con compresión gzip y caché de 7 días; imágenes optimizadas (−58 %); contenedores con reinicio automático (`restart: unless-stopped`) y chequeos de salud; monitoreo cada 5 min (`scripts/vigilar.sh`) y alertas de Azure Monitor | Abrir https://aikukisna.chilecentral.cloudapp.azure.com · `docker compose ps` (todos `healthy`) |
+| **2. Seguridad (HTTPS)** | Certificado de Let's Encrypt renovado automáticamente por el contenedor `certbot`; HTTP redirige a HTTPS; cabecera HSTS | Candado del navegador · `curl -I http://aikukisna.chilecentral.cloudapp.azure.com` → `301` a `https://` |
+| **3. Flujo automático** | Páginas de error propias sin códigos técnicos (`web/404.html`, `web/50x.html`); la API responde siempre `{"error": "mensaje claro"}`; el formulario valida y confirma el envío; la descarga apunta sola a la última versión publicada | https://aikukisna.chilecentral.cloudapp.azure.com/no-existe · `curl https://aikukisna.chilecentral.cloudapp.azure.com/api/no-existe` |
+| **4. Integraciones** | Sesión del panel con **JWT** (cookie `HttpOnly`, `Secure`, `SameSite=Strict`) y contraseña con hash **bcrypt**; base de datos **PostgreSQL**; API REST propia consumida por la landing y el panel; la app usa **Supabase** y **Google Sign-In** | Entrar a `/admin/` · `curl https://aikukisna.chilecentral.cloudapp.azure.com/api/admin/demos` → `{"error":"Inicia sesión"}` sin sesión |
+| **5. Código vinculado a GitHub** | El servidor es un clon de este repositorio y se actualiza solo con `scripts/desplegar.sh` desde `main`; `/api/salud` informa el commit que está corriendo | Comparar `version` de https://aikukisna.chilecentral.cloudapp.azure.com/api/salud con el último commit de `main` |
+
+### Requisitos del sprint anterior
+
+| Requisito | Dónde |
+|---|---|
+| Servidor en Azure con usuario estándar (no root) | VM Ubuntu 24.04 `vm-aikukisna` (Chile Central), usuario `aikuadmin`; `scripts/preparar_servidor.sh` desactiva el acceso root y por contraseña |
+| Monitoreo básico | Azure Monitor (Insights + alertas por correo) y `scripts/vigilar.sh` |
+| Proxy inverso | `nginx/templates/aikukisna.conf.template`: Nginx es el único servicio expuesto (80/443) |
+| Contenedores aislados | `docker-compose.yml`: 4 contenedores; la base vive en una red `internal` sin salida a internet |
+| Variables ocultas y CORS | `.env` solo en el servidor (permisos 600, en `.gitignore`); `CORS_ORIGENES` limita qué sitios pueden llamar a la API |
+| Landing, formulario de demo y panel | `web/`, `web/form.html`, `admin/` |
+
 ## Arquitectura
 
 ```
