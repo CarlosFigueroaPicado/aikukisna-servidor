@@ -33,6 +33,9 @@ En producción: **https://aikukisna.chilecentral.cloudapp.azure.com**
 
 ### Requisitos del sprint anterior
 
+Detalle completo, con la ubicación de cada cosa en el código, el servidor y el portal de Azure:
+**[ENTREGABLES.md](ENTREGABLES.md)**.
+
 | Requisito | Dónde |
 |---|---|
 | Servidor en Azure con usuario estándar (no root) | VM Ubuntu 24.04 `vm-aikukisna` (Chile Central), usuario `aikuadmin`; `scripts/preparar_servidor.sh` desactiva el acceso root y por contraseña |
