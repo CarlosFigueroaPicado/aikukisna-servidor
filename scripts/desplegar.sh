@@ -13,7 +13,8 @@ git fetch --quiet origin "$RAMA"
 # Los cambios locales se descartan: el servidor debe ser idéntico a GitHub (.env y respaldos no están en git).
 git checkout --quiet -B "$RAMA" "origin/$RAMA"
 git reset --quiet --hard "origin/$RAMA"
-export VERSION_CODIGO="$(git rev-parse --short HEAD)"
+VERSION_CODIGO="$(git rev-parse --short HEAD)"
+echo "VERSION_CODIGO=$VERSION_CODIGO" > .version.env
 echo "    commit $VERSION_CODIGO: $(git log -1 --format=%s)"
 
 echo "==> 2/4 Construyendo y levantando los contenedores"

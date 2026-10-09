@@ -30,12 +30,15 @@ services:
   api:
     build: ./api
     restart: unless-stopped
-    env_file: .env
+    env_file:
+      - .env
+      # Commit de GitHub desplegado (lo escribe scripts/desplegar.sh; se ve en /api/salud). Queda en un
+      # archivo para que se conserve al reiniciar la VM o al recrear los contenedores con "up -d".
+      - path: .version.env
+        required: false
     environment:
       BD_HOST: bd
       CARPETA_DESCARGAS: /datos/descargas
-      # Commit de GitHub desplegado; lo exporta scripts/desplegar.sh y se ve en /api/salud.
-      VERSION_CODIGO: ${VERSION_CODIGO:-sin-git}
     volumes:
       - descargas:/datos/descargas
     depends_on:

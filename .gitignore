@@ -1,5 +1,6 @@
 # Variables ocultas: solo existen en el servidor.
 .env
+.version.env
 node_modules/
 respaldos/
 vigilancia.log
