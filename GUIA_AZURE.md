@@ -108,7 +108,7 @@ Ya dentro del servidor, descarga solo el script de preparación y ejecútalo (ca
 repositorio):
 
 ```bash
-curl -fsSLO https://raw.githubusercontent.com/<usuario>/aikukisna-servidor/main/scripts/preparar_servidor.sh
+curl -fsSLO https://raw.githubusercontent.com/CarlosFigueroaPicado/aikukisna-servidor/main/scripts/preparar_servidor.sh
 bash preparar_servidor.sh
 ```
 
@@ -128,7 +128,7 @@ exit
 ```
 
 ```bash
-git clone https://github.com/<usuario>/aikukisna-servidor.git /opt/aikukisna
+git clone https://github.com/CarlosFigueroaPicado/aikukisna-servidor.git /opt/aikukisna
 cd /opt/aikukisna
 ```
 
