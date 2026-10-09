@@ -1,0 +1,125 @@
+# Plantilla: la imagen oficial de Nginx reemplaza ${DOMINIO} al arrancar.
+server_tokens off;
+
+limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+
+# HTTP: solo valida el certificado de Let's Encrypt y redirige a HTTPS.
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ${DOMINIO};
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name ${DOMINIO};
+
+    ssl_certificate     /etc/letsencrypt/live/${DOMINIO}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMINIO}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+
+    # Un location con add_header propio no hereda los del server: por eso van en un archivo incluido.
+    include /etc/nginx/templates/seguridad.inc;
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+    gzip_min_length 1024;
+
+    # Landing page (la diseña el equipo; se copia en despliegue/web).
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Páginas de error amigables (sin códigos técnicos), con el diseño de la landing.
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+    location = /404.html { internal; }
+    location = /50x.html { internal; }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~* \.(css|js|png|jpg|jpeg|webp|svg|woff2?)$ {
+        expires 7d;
+        include /etc/nginx/templates/seguridad.inc;
+        add_header Cache-Control "public";
+    }
+
+    # Panel administrativo (archivos estáticos; los datos exigen sesión en la API).
+    # ^~: los .js/.css del panel no deben caer en la regla de caché de la landing (regex).
+    location ^~ /admin/ {
+        alias /usr/share/nginx/admin/;
+        index index.html;
+        include /etc/nginx/templates/seguridad.inc;
+        add_header Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'" always;
+        add_header Cache-Control "no-store" always;
+    }
+
+    # API: el código nunca queda expuesto; Nginx es el único que recibe tráfico de internet.
+    # Si la API no responde, quien la llama (formulario, panel) recibe un mensaje en JSON, no una página.
+    location @api_no_disponible {
+        default_type application/json;
+        return 503 '{"error":"El servicio no está disponible en este momento. Intenta de nuevo en unos segundos."}';
+    }
+
+    location @api_muy_grande {
+        default_type application/json;
+        return 413 '{"error":"El archivo es demasiado grande."}';
+    }
+
+    location /api/ {
+        error_page 502 503 504 = @api_no_disponible;
+        error_page 413 = @api_muy_grande;
+        limit_req zone=api burst=20 nodelay;
+        proxy_pass http://api:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        client_max_body_size 1m;
+    }
+
+    # Subida de instalables desde el panel: la APK con el modelo de Tuki pesa cientos de MB.
+    location = /api/admin/versiones {
+        error_page 502 503 504 = @api_no_disponible;
+        error_page 413 = @api_muy_grande;
+        proxy_pass http://api:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        client_max_body_size 1600m;
+        proxy_request_buffering off;
+        proxy_read_timeout 900s;
+        proxy_send_timeout 900s;
+    }
+
+    # Descargas servidas directo por Nginx (rápido y con reanudación).
+    location ^~ /descargas/ {
+        alias /datos/descargas/;
+        # default_type no admite variables: el tipo de cada instalable va en un bloque types.
+        types {
+            application/vnd.android.package-archive apk;
+            application/vnd.microsoft.portable-executable exe;
+            application/x-apple-diskimage dmg;
+        }
+        default_type application/octet-stream;
+        include /etc/nginx/templates/seguridad.inc;
+        add_header Content-Disposition "attachment" always;
+        location ~ /subiendo- { deny all; }
+    }
+}

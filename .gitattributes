@@ -1,0 +1,5 @@
+# Los scripts se ejecutan en Linux: con finales de línea de Windows (CRLF) bash falla.
+*.sh text eol=lf
+*.template text eol=lf
+*.yml text eol=lf
+.env.example text eol=lf

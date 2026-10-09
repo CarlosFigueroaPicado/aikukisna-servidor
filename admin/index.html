@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Panel administrativo - Aikukisna</title>
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    <link rel="stylesheet" href="/estilos.css">
+    <link rel="stylesheet" href="dashies.css">
+</head>
+
+<body>
+
+    <header class="header1">
+        <div>
+            <img src="/img/aikukisnatagline.png" alt="Aikukisna" class="tagline">
+        </div>
+        <div class="menu">
+            <a href="/">Inicio</a>
+            <a href="#" id="salir" hidden>Cerrar sesión</a>
+        </div>
+    </header>
+    <main>
+        <div class="content1">
+
+            <!-- Inicio de sesión -->
+            <section id="vista-sesion" hidden>
+                <form id="form-sesion" class="tarjeta-sesion">
+                    <h2>Panel administrativo</h2>
+                    <label>Usuario <input name="usuario" autocomplete="username" required></label>
+                    <label>Contraseña <input name="contrasena" type="password" autocomplete="current-password" required></label>
+                    <button type="submit" class="btn1">Entrar</button>
+                    <p class="error" id="error-sesion" role="alert"></p>
+                </form>
+            </section>
+
+            <!-- Pestañas: Solicitudes / Cargar (diseño original de dashi.html) -->
+            <section id="vista-panel" hidden>
+                <div class="cajita" role="tablist">
+                    <button class="cubo" id="cubo1" role="tab" aria-selected="true" data-pestana="solicitudes">
+                        <h2 id="fan1">Solicitudes <span id="total-demos"></span></h2>
+                    </button>
+                    <button class="cubo2" id="cubo2" role="tab" aria-selected="false" data-pestana="cargar">
+                        <h2 id="fan2">Cargar</h2>
+                    </button>
+                </div>
+                <div class="cajato">
+
+                    <div id="pestana-solicitudes">
+                        <div class="fila">
+                            <p class="nota">Personas que pidieron una demostración desde la landing.</p>
+                            <button id="recargar-demos" class="btn2">Actualizar</button>
+                        </div>
+                        <div class="tabla">
+                            <table>
+                                <thead>
+                                    <tr><th>Fecha</th><th>Nombre</th><th>Correo</th><th>Organización</th><th>Teléfono</th><th>Mensaje</th><th>Estado</th></tr>
+                                </thead>
+                                <tbody id="lista-demos"></tbody>
+                            </table>
+                        </div>
+                        <p id="sin-demos" class="nota" hidden>Todavía no hay solicitudes.</p>
+                    </div>
+
+                    <div id="pestana-cargar" hidden>
+                        <h3>Subir una versión instalable</h3>
+                        <form id="form-version" class="rejilla">
+                            <label>Plataforma
+                                <select name="plataforma" required>
+                                    <option value="android">Android (.apk)</option>
+                                    <option value="windows">Windows (.exe)</option>
+                                    <option value="macos">macOS (.dmg)</option>
+                                </select>
+                            </label>
+                            <label>Versión <input name="version" placeholder="1.0.0" pattern="[0-9A-Za-z._\-]{1,40}" required></label>
+                            <label class="ancho">Notas de la versión <textarea name="notas" rows="2" placeholder="Qué cambió en esta versión"></textarea></label>
+                            <label class="ancho">Archivo <input name="archivo" type="file" accept=".apk,.exe,.dmg" required></label>
+                            <div class="ancho">
+                                <progress id="progreso" max="100" value="0" hidden></progress>
+                                <button type="submit" id="boton-subir" class="btn1">Subir</button>
+                                <span id="estado-subida" class="nota"></span>
+                            </div>
+                        </form>
+
+                        <h3>Versiones publicadas</h3>
+                        <p class="nota">La landing ofrece siempre la más reciente de cada plataforma.</p>
+                        <div class="tabla">
+                            <table>
+                                <thead>
+                                    <tr><th>Plataforma</th><th>Versión</th><th>Tamaño</th><th>SHA-256</th><th>Publicada</th><th></th></tr>
+                                </thead>
+                                <tbody id="lista-versiones"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>

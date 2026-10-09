@@ -1,0 +1,384 @@
+Main {
+    background-color: #fff;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.header1 {
+    width: 100%;
+    height: 90px;
+    background-color: #ff8c00;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 20px;
+    gap: 40px;
+}
+
+.header1 a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+main {
+    background-color: #fff;
+}
+
+.img1 img {
+    width: 50px;
+    height: 45px;
+    
+}
+
+.img2 {
+    width: 300px;
+}
+
+.btn1 {
+    background-color: #ff8c00;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.contenido1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    padding: 50px;
+}
+
+.tagline {
+    width: 300px;
+}
+
+.contenido2 {
+    color: #fff;
+    background-color: #1579D1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    padding: 50px;
+}
+
+.contenido3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    padding: 50px;
+}
+
+.img3 {
+    margin-bottom: 350px;
+}
+
+.img4 {
+    border-radius: 10px;
+    box-shadow: 8px 10px 18px rgba(0, 0, 0, 0.2);
+    width: 350px;
+}
+
+.footer1 {
+    background-color: #ff8c00;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* ===== Agregado para el despliegue (no cambia las reglas de arriba) ===== */
+
+body {
+    background-color: #fff;
+}
+
+/* Las imágenes declaran ancho y alto en el HTML (evita saltos al cargar); la altura sigue a la proporción. */
+.img2,
+.img4 {
+    height: auto;
+}
+
+.enlace-logo {
+    display: flex;
+}
+
+.menu {
+    display: flex;
+    gap: 28px;
+}
+
+.menu a:hover,
+.footer-enlaces a:hover {
+    text-decoration: underline;
+}
+
+/* Los botones ahora son enlaces de descarga: se ven igual que el <button> original. */
+a.btn1 {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn1:hover {
+    background-color: #e67e00;
+}
+
+.btn1.desactivado {
+    background-color: #c9c9c9;
+    color: #fff;
+    cursor: default;
+    pointer-events: none;
+}
+
+.btn1:disabled {
+    opacity: .6;
+    cursor: default;
+}
+
+.btn2 {
+    display: inline-block;
+    color: #ff8c00;
+    border: 2px solid #ff8c00;
+    padding: 8px 18px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.btn2:hover {
+    background-color: #fff4e6;
+}
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.nota-descarga {
+    margin-top: 12px;
+    color: #666;
+    font-size: 14px;
+}
+
+.nota-descarga a {
+    color: #ff8c00;
+    font-weight: bold;
+}
+
+.footer-enlaces {
+    margin-top: 8px;
+}
+
+.footer-enlaces a {
+    color: #fff;
+}
+
+/* Formulario de demostración (form.html), sobre la franja azul de la landing. */
+.contenido-demo {
+    align-items: flex-start;
+}
+
+.texto-demo {
+    max-width: 420px;
+}
+
+.texto-demo .img2 {
+    width: 220px;
+    margin-top: 20px;
+}
+
+.formulario {
+    background-color: #fff;
+    color: #222;
+    border-radius: 10px;
+    box-shadow: 8px 10px 18px rgba(0, 0, 0, 0.2);
+    padding: 28px;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.formulario label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.formulario input,
+.formulario textarea {
+    font-size: 16px;
+    font-weight: normal;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.formulario input:focus,
+.formulario textarea:focus {
+    outline: 2px solid #ff8c00;
+    border-color: #ff8c00;
+}
+
+.formulario .btn1 {
+    align-self: flex-start;
+}
+
+.oculto {
+    position: absolute;
+    left: -10000px;
+}
+
+.estado-form {
+    min-height: 1.2em;
+    font-size: 14px;
+}
+
+.estado-form.ok {
+    color: #1b7f3b;
+}
+
+.estado-form.error {
+    color: #c0392b;
+}
+
+/* ===== Teléfonos y tabletas: las filas pasan a columna ===== */
+@media (max-width: 800px) {
+    .header1 {
+        height: auto;
+        flex-wrap: wrap;
+        gap: 12px 24px;
+        padding: 14px 16px;
+    }
+
+    .tagline {
+        width: 180px;
+    }
+
+    .header1 a {
+        font-size: 16px;
+    }
+
+    .img1 {
+        display: none;
+    }
+
+    .contenido1,
+    .contenido2,
+    .contenido3 {
+        flex-direction: column;
+        text-align: center;
+        gap: 28px;
+        padding: 36px 16px;
+    }
+
+    .img2 {
+        width: 200px;
+    }
+
+    .img3 {
+        margin-bottom: 0;
+    }
+
+    .img4 {
+        width: 260px;
+        height: auto;
+    }
+
+    .acciones {
+        justify-content: center;
+    }
+
+    .contenido-demo {
+        align-items: center;
+    }
+
+    .texto-demo .img2 {
+        display: none;
+    }
+
+    .formulario {
+        padding: 20px;
+        text-align: left;
+    }
+}
+
+/* Tarjeta de descarga que aparece al enviar la solicitud de demostración. */
+.card-descarga {
+    border: none;
+    border-radius: 16px;
+    padding: 32px 28px 24px;
+    max-width: 420px;
+    width: calc(100% - 32px);
+    margin: auto;
+    text-align: center;
+    box-shadow: 8px 10px 30px rgba(0, 0, 0, 0.3);
+    border-top: 8px solid #ff8c00;
+}
+
+.card-descarga::backdrop {
+    background-color: rgba(21, 121, 209, 0.55);
+}
+
+.card-descarga[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.card-descarga h2 {
+    color: #1579D1;
+}
+
+.card-descarga p {
+    color: #333;
+    line-height: 1.4;
+}
+
+.card-tuki {
+    width: 140px;
+    height: auto;
+    margin-top: -8px;
+}
+
+.card-descarga .btn1 {
+    font-size: 18px;
+    padding: 12px 28px;
+}
+
+.card-descarga .nota-descarga {
+    margin-top: 0;
+}
+
+.card-descarga .btn2 {
+    background: none;
+    cursor: pointer;
+}
+
+/* Páginas de error (404.html y 50x.html): mismo diseño que la bienvenida, sin códigos técnicos. */
+.pagina-error {
+    min-height: 60vh;
+}
+
+.pagina-error p {
+    max-width: 520px;
+    line-height: 1.5;
+}

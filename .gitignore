@@ -1,0 +1,5 @@
+# Variables ocultas: solo existen en el servidor.
+.env
+node_modules/
+respaldos/
+vigilancia.log

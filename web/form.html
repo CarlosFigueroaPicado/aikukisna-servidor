@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar una demostración - Aikukisna</title>
+    <meta name="description" content="Solicita una demostración de Aikukisna para tu escuela, comunidad u organización.">
+    <meta name="theme-color" content="#ff8c00">
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+    <header class="header1">
+        <a href="./" class="enlace-logo"><img src="img/aikukisnatagline.png" alt="Aikukisna - Conectando con nuestras raíces" class="tagline"></a>
+        <nav class="menu" aria-label="Menú principal">
+            <a href="./">Inicio</a>
+        </nav>
+        <div class="img1">
+            <img src="img/logo.png" alt="Logotipo Aikukisna">
+        </div>
+    </header>
+
+    <main>
+        <section class="contenido2 contenido-demo">
+            <div class="texto-demo">
+                <h2>Solicita una demostración</h2><br><br>
+                <p>
+                    ¿Eres docente, diriges una escuela o trabajas con una organización comunitaria? Déjanos tus datos y te mostramos cómo Aikukisna puede acompañar a tus estudiantes, con o sin conexión a internet.
+                </p><br>
+                <img src="img/aikukisnaTuki.png" class="img2" alt="Tuki, la mascota de Aikukisna" width="300" height="300">
+            </div>
+
+            <form class="formulario" id="form-demo" novalidate>
+                <label>Nombre completo *
+                    <input name="nombre" required maxlength="120" autocomplete="name">
+                </label>
+                <label>Correo electrónico *
+                    <input name="correo" type="email" required maxlength="160" autocomplete="email">
+                </label>
+                <label>Escuela u organización
+                    <input name="organizacion" maxlength="160" autocomplete="organization">
+                </label>
+                <label>Teléfono
+                    <input name="telefono" type="tel" maxlength="40" autocomplete="tel">
+                </label>
+                <label>¿Qué te gustaría ver en la demostración?
+                    <textarea name="mensaje" rows="4" maxlength="2000"></textarea>
+                </label>
+                <!-- Campo trampa: las personas no lo ven; si llega lleno, es un robot. -->
+                <input name="sitio_web" class="oculto" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <button type="submit" class="btn1">Enviar solicitud</button>
+                <p class="estado-form" id="estado-form" role="status"></p>
+            </form>
+        </section>
+    </main>
+
+    <!-- Tarjeta que aparece al enviar la solicitud: invita a descargar la app. -->
+    <dialog class="card-descarga" id="card-descarga" aria-labelledby="titulo-card">
+        <img src="img/aikukisnaTuki.png" alt="" class="card-tuki" width="160" height="160">
+        <h2 id="titulo-card">¡Gracias por tu solicitud!</h2>
+        <p>Puedes descargar nuestra app y ser parte de esta nueva aventura.</p>
+        <a class="btn1" id="boton-descarga-card" download hidden>Descargar Ahora</a>
+        <p class="nota-descarga" id="detalle-card"></p>
+        <button type="button" class="btn2" id="cerrar-card">Cerrar</button>
+    </dialog>
+
+    <footer>
+        <div class="footer1">
+            <p>© 2026 Aikukisna. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="landing.js" defer></script>
+</body>
+
+</html>

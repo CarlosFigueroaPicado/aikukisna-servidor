@@ -1,0 +1,91 @@
+# Aikukisna en Azure: Nginx (único servicio expuesto) → API → PostgreSQL.
+# La base y la API no publican puertos: solo se alcanzan por la red interna de Docker.
+name: aikukisna
+
+x-registros: &registros
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "5"
+
+services:
+  bd:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - datos_bd:/var/lib/postgresql/data
+    networks: [interna]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    <<: *registros
+
+  api:
+    build: ./api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      BD_HOST: bd
+      CARPETA_DESCARGAS: /datos/descargas
+      # Commit de GitHub desplegado; lo exporta scripts/desplegar.sh y se ve en /api/salud.
+      VERSION_CODIGO: ${VERSION_CODIGO:-sin-git}
+    volumes:
+      - descargas:/datos/descargas
+    depends_on:
+      bd:
+        condition: service_healthy
+    networks: [interna, web]
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    <<: *registros
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMINIO: ${DOMINIO}
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates:ro
+      - ./web:/usr/share/nginx/html:ro
+      - ./admin:/usr/share/nginx/admin:ro
+      - descargas:/datos/descargas:ro
+      - certbot_www:/var/www/certbot:ro
+      - certbot_conf:/etc/letsencrypt:ro
+    depends_on: [api]
+    networks: [web]
+    security_opt: ["no-new-privileges:true"]
+    <<: *registros
+
+  certbot:
+    image: certbot/certbot:v3.1.0
+    restart: unless-stopped
+    volumes:
+      - certbot_www:/var/www/certbot
+      - certbot_conf:/etc/letsencrypt
+    # Renueva el certificado dos veces al día (solo lo cambia cuando le faltan menos de 30 días).
+    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done'
+    networks: [web]
+    <<: *registros
+
+networks:
+  # Sin salida a internet: aquí viven la base y la API.
+  interna:
+    internal: true
+  web: {}
+
+volumes:
+  datos_bd:
+  descargas:
+  certbot_www:
+  certbot_conf:
